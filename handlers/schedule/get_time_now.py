@@ -24,7 +24,7 @@ def get_weekday(condition: bool = True):
         elif number_day == 5:
             return "Saturday"
         else:
-            return None
+            return "Monday"
     else:
         if number_day == 6:
             return "Monday"

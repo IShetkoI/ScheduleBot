@@ -166,7 +166,7 @@ async def save_subgroup(call: CallbackQuery, callback_data: dict):
         message_text = 'Какой выберите день?'
         keyboard = days_kb(4, 2, 2)
 
-    elif function in ['Monday421', 'Tuesday421', 'Wednesday421', 'Thursday421', 'Friday421', 'Saturday421']:
+    if function in ['Monday421', 'Tuesday421', 'Wednesday421', 'Thursday421', 'Friday421', 'Saturday421']:
         day = function
         sql = "SELECT Time, {0} FROM '{1}'".format(day[:-3], (get_table_fourth_for_week(2, 1)))
         cursor.execute(sql)
@@ -174,7 +174,7 @@ async def save_subgroup(call: CallbackQuery, callback_data: dict):
         message_text = get_schedule_list(day_list)
         keyboard = days_kb(4, 2, 1)
 
-    elif function in ['Monday422', 'Tuesday422', 'Wednesday422', 'Thursday422', 'Friday422', 'Saturday422']:
+    if function in ['Monday422', 'Tuesday422', 'Wednesday422', 'Thursday422', 'Friday422', 'Saturday422']:
         day = function
         sql = "SELECT Time, {0} FROM '{1}'".format(day[:-3], (get_table_fourth_for_week(2, 2)))
         cursor.execute(sql)
@@ -237,7 +237,7 @@ async def save_subgroup(call: CallbackQuery, callback_data: dict):
         message_text = 'Какой выберите день?'
         keyboard = days_kb(group=5, week=2)
 
-    elif function in ['Monday51', 'Tuesday51', 'Wednesday51', 'Thursday51', 'Friday51', 'Saturday51']:
+    if function in ['Monday51', 'Tuesday51', 'Wednesday51', 'Thursday51', 'Friday51', 'Saturday51']:
         day = function
         sql = "SELECT Time, {0} FROM '{1}'".format(day[:-2], (get_table_fifth_for_week(1)))
         cursor.execute(sql)
@@ -245,7 +245,7 @@ async def save_subgroup(call: CallbackQuery, callback_data: dict):
         message_text = get_schedule_list(day_list)
         keyboard = days_kb(5, week=1)
 
-    elif function in ['Monday52', 'Tuesday52', 'Wednesday52', 'Thursday52', 'Friday52', 'Saturday52']:
+    if function in ['Monday52', 'Tuesday52', 'Wednesday52', 'Thursday52', 'Friday52', 'Saturday52']:
         day = function
         sql = "SELECT Time, {0} FROM '{1}'".format(day[:-2], (get_table_fifth_for_week(2)))
         cursor.execute(sql)

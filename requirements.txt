@@ -3,3 +3,4 @@ data==0.4
 aiogram==2.14.3
 aioschedule==0.5.2
 fuzzywuzzy==0.18.0
+dwda

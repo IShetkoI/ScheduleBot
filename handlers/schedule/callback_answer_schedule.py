@@ -40,6 +40,39 @@ async def save_subgroup(call: CallbackQuery, callback_data: dict):
 
 # ===============================================4-1=====================================================================
 
+    if get_weekday(False) is not None:
+        if function == 'tomorrow41':
+            keyboard = main_schedule_kb(4, 1)
+            sql = "SELECT Time, {0} FROM '{1}'".format(get_weekday(False),
+                                                       (get_table_fourth(1)))
+            cursor.execute(sql)
+            day_list = cursor.fetchall()
+            message_text = get_schedule_list(day_list)
+    else:
+        message_text = 'Отдыхаем.'
+
+    if get_weekday(False) is not None:
+        if function == 'tomorrow42':
+            keyboard = main_schedule_kb(4, 2)
+            sql = "SELECT Time, {0} FROM '{1}'".format(get_weekday(False),
+                                                       (get_table_fourth(2)))
+            cursor.execute(sql)
+            day_list = cursor.fetchall()
+            message_text = get_schedule_list(day_list)
+    else:
+        message_text = 'Отдыхаем.'
+
+    if get_weekday(False) is not None:
+        if function == 'tomorrow5':
+            keyboard = main_schedule_kb(5)
+            sql = "SELECT Time, {0} FROM '{1}'".format(get_weekday(False),
+                                                       (get_table_fifth()))
+            cursor.execute(sql)
+            day_list = cursor.fetchall()
+            message_text = get_schedule_list(day_list)
+    else:
+        message_text = 'Отдыхаем.'
+
     if get_weekday() is not None:
         if function == 'today41':
             sql = "SELECT Time, {0} FROM '{1}'".format(get_weekday(), (get_table_fourth(1)))
@@ -68,17 +101,6 @@ async def save_subgroup(call: CallbackQuery, callback_data: dict):
                     message_text = 'Отдыхаем.'
             else:
                 message_text = 'Отдыхаем.'
-    else:
-        message_text = 'Отдыхаем.'
-
-    if get_weekday(False) is not None:
-        if function == 'tomorrow41':
-            keyboard = main_schedule_kb(4, 1)
-            sql = "SELECT Time, {0} FROM '{1}'".format(get_weekday(False),
-                                                       (get_table_fourth(1)))
-            cursor.execute(sql)
-            day_list = cursor.fetchall()
-            message_text = get_schedule_list(day_list)
     else:
         message_text = 'Отдыхаем.'
 
@@ -143,17 +165,6 @@ async def save_subgroup(call: CallbackQuery, callback_data: dict):
     else:
         message_text = 'Отдыхаем.'
 
-    if get_weekday(False) is not None:
-        if function == 'tomorrow42':
-            keyboard = main_schedule_kb(4, 2)
-            sql = "SELECT Time, {0} FROM '{1}'".format(get_weekday(False),
-                                                       (get_table_fourth(2)))
-            cursor.execute(sql)
-            day_list = cursor.fetchall()
-            message_text = get_schedule_list(day_list)
-    else:
-        message_text = 'Отдыхаем.'
-
     if function == 'days42':
         message_text = f'Какую выберите неделю, если сейчас {get_number_week()}-ая?'
         keyboard = choose_week_kb(4, 2)
@@ -214,16 +225,6 @@ async def save_subgroup(call: CallbackQuery, callback_data: dict):
     else:
         message_text = 'Отдыхаем.'
 
-    if get_weekday(False) is not None:
-        if function == 'tomorrow5':
-            keyboard = main_schedule_kb(5)
-            sql = "SELECT Time, {0} FROM '{1}'".format(get_weekday(False),
-                                                       (get_table_fifth()))
-            cursor.execute(sql)
-            day_list = cursor.fetchall()
-            message_text = get_schedule_list(day_list)
-    else:
-        message_text = 'Отдыхаем.'
 
     if function == 'days5':
         message_text = f'Какую выберите неделю, если сейчас {get_number_week()}-ая?'

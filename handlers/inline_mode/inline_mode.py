@@ -58,7 +58,6 @@ def get_icon(item_num):
 
 
 # Инлайн-хэндлер из секции дополнительных материалов
-# Не зарегистрирован и не используется
 @dp.inline_handler()
 async def inline_handler_extra(query: types.InlineQuery):
     query_offset = int(query.offset) if query.offset else 0

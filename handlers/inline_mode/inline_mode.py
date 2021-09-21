@@ -63,8 +63,8 @@ async def inline_handler_extra(query: types.InlineQuery):
     query_offset = int(query.offset) if query.offset else 0
     results=[]
     for item_num in get_fake_results(query_offset, temp=config.lib, size=len(config.lib)):
-        if query.query in item_num[0] or query.query in item_num[1][1] or query.query in item_num[1][2] or query.query == '':
-            if len(str(item_num[1][2])) >=30:
+        if query.query.lower() in item_num[0].lower() or query.query.lower() in item_num[1][1].lower() or query.query.lower() in item_num[1][2].lower() or query.query == '':
+            if len(str(item_num[1][2])) >= 30:
                 file_name = item_num[1][2][:8]+"..."+item_num[1][2][-8:]
             else:
                 file_name = item_num[1][2]

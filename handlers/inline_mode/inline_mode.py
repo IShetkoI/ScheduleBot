@@ -65,12 +65,13 @@ async def inline_handler_extra(query: types.InlineQuery):
     results=[]
     for item_num in get_fake_results(query_offset, temp=config.lib, size=len(config.lib)):
         if query.query in item_num[0] or query.query in item_num[1][1] or query.query in item_num[1][2] or query.query == '':
-            if item_num[1][2] >=30:
+            if len(str(item_num[1][2])) >=30:
                 file_name = item_num[1][2][:8]+"..."+item_num[1][2][-8:]
             else:
                 file_name = item_num[1][2]
             results.append(types.InlineQueryResultArticle(id=str(item_num[0]), title=f"{item_num[0]}", description=f'{item_num[1][1]}\n{file_name}', thumb_url=get_icon(item_num[1][2]), input_message_content=types.InputTextMessageContent(message_text=f"/give_me {item_num[0]}")))
         # {имя файла:[айди сообшения, Категория, имя файла.формат]
+    print(results)
     if len(results) < 50:
         # Результатов больше не будет, next_offset пустой
         await query.answer(results, is_personal=True, next_offset="", cache_time=1)

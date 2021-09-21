@@ -1,8 +1,6 @@
+from data import config
 from loader import dp
 from aiogram import types
-from fuzzywuzzy import fuzz as f
-
-res = {'Вот такую хочу':[234, 'BQACAgIAAx0CSoMIRQACDQFhLlY1cFMS5iCoxQ6W36QCBXoYgwACMxMAAh5KcEnDijTBzvWKzyAE', 'IShetkoI', 'Электроника', 'kisspng_united_states_american_frontier_sheriff_badge_clip_sheriff.jpg']}
 
 
 def get_fake_results(start_num: int, temp, size: int = 50):
@@ -64,21 +62,13 @@ def get_icon(item_num):
 @dp.inline_handler()
 async def inline_handler_extra(query: types.InlineQuery):
     query_offset = int(query.offset) if query.offset else 0
-    temp = {}
-    if query.query != "":
-        for item in res.items():
-            if f.partial_ratio(str(query.query), str(item[0])) >= 75 or f.partial_ratio(str(query.query), str(item[1][2])) >= 75 or f.partial_ratio(str(query.query), str(item[1][1])) >= 75 or str(query.query) in item[1][4]:
-                temp[item[0]] = item[1]
-
-    else:
-        temp = res
     results=[]
-    for item_num in get_fake_results(query_offset, temp=temp, size=len(temp)):
-        if '.png' not in item_num[1][4] and '.jpg' not in item_num[1][4]:
-            results.append(types.InlineQueryResultArticle(id=str(item_num[0]), title=f"{item_num[0]}", description=f'{item_num[1][2]}\n@{item_num[1][1]}\n{item_num[1][4]}', thumb_url=get_icon(item_num[1][4]), input_message_content=types.InputTextMessageContent(message_text=f"/give_me {item_num[0]}")))
-        else:
-            results.append(types.InlineQueryResultCachedDocument(id=str(item_num[0]), title=f"{item_num[0]}", document_file_id=f"{item_num[1][1]}", description=f'{item_num[1][3]}\n@{item_num[1][2]}\n{item_num[1][4]}'))
-
+    for item_num in get_fake_results(query_offset, temp=config.lib, size=len(config.lib)):
+        if query.query in item_num[0] or query.query in item_num[1][1] or query.query in item_num[1][2]:
+            if item_num[1][2] >=30:
+                file_name = item_num[1][2][:8]+"..."+item_num[1][2][-8:]
+            results.append(types.InlineQueryResultArticle(id=str(item_num[0]), title=f"{item_num[0]}", description=f'{item_num[1][1]}\n{file_name}', thumb_url=get_icon(item_num[1][2]), input_message_content=types.InputTextMessageContent(message_text=f"/give_me {item_num[0]}")))
+        # {имя файла:[айди сообшения, Категория, имя файла.формат]
     if len(results) < 50:
         # Результатов больше не будет, next_offset пустой
         await query.answer(results, is_personal=True, next_offset="", cache_time=1)

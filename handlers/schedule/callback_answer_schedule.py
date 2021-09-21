@@ -263,7 +263,7 @@ async def save_subgroup(call: CallbackQuery, callback_data: dict):
 @dp.callback_query_handler(cancel_callback.filter(cancel='cancel'))
 async def cancel_callback(call: CallbackQuery, callback_data: dict):
     from_what = str(callback_data.get('from_what'))
-    if from_what == 'main41' or from_what == 'main42'or from_what == 'main5':
+    if from_what == 'main41' or from_what == 'main42' or from_what == 'main5':
         await call.message.edit_text(text=text('Выберите номер подгруппы:'))
         await call.message.edit_reply_markup(choose_subgroup_kb())
     elif from_what == 'choose_subgroup':

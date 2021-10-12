@@ -10,15 +10,15 @@ from handlers.schedule.get_time_now import get_time, get_time_range, get_weekday
 from loader import dp
 
 
-async def scheduler():
-    if get_time().weekday() != 6:
+# async def scheduler():
+    # if get_time().weekday() != 6:
         # aioschedule.every().days.at("4:40").do(schedule_notification)
         # aioschedule.every().days.at("6:15").do(schedule_notification)
         # aioschedule.every().days.at("7:50").do(schedule_notification)
         # aioschedule.every().days.at("9:40").do(schedule_notification)
-    while True:
-        await aioschedule.run_pending()
-        await asyncio.sleep(1)
+    # while True:
+        # await aioschedule.run_pending()
+        # await asyncio.sleep(1)
 
 
 async def schedule_notification():

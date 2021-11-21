@@ -91,14 +91,14 @@ sort_list = [
     "мороженки"
 ]
 
-prod_callback = CallbackData('mainSchedule-prefix', 'prod', 'prod')
+prod_callback = CallbackData('mainSchedule-prefix', 'prod', 'func')
 
 
 def prod_kb():
     keyboard = types.InlineKeyboardMarkup(row_width=1)
     bt1 = types.InlineKeyboardButton('Добавить',
                                      callback_data=prod_callback.new(prod='prod',
-                                                                     prod="prod"))
+                                                                     func="prod"))
     keyboard.row(bt1)
     return keyboard
 

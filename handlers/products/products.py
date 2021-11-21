@@ -138,6 +138,8 @@ async def get_list(message: types.Message):
 @dp.message_handler(state=States.new)
 async def get_list(message: types.Message, state: FSMContext):
     if message.chat.id == -1001445673200 and (message.from_user.id == 843434988 or message.from_user.id == 410249555):
+        global message_list_text
+        global message_list_id
         mother_list = message.text
         await message.delete()
         mother_list = mother_list.split("\n")

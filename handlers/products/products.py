@@ -110,6 +110,7 @@ async def prod(call: CallbackQuery, callback_data: dict):
 
 @dp.message_handler(state=States.edit)
 async def ed(message: types.Message, state: FSMContext):
+    global message_list_text
     mother_list = message.text + "\n" + message_list_text
     await message.delete()
     mother_list = mother_list.split("\n")
@@ -126,6 +127,7 @@ async def ed(message: types.Message, state: FSMContext):
         for k in mother_list:
             sorted_mother_list += k + "\n"
     await state.reset_state()
+    message_list_text = sorted_mother_list.replace("\n\nНе найдено:\n", "")
     await dp.bot.edit_message_text(text=sorted_mother_list, chat_id=-1001445673200, message_id=message_list_id.message_id, reply_markup=prod_kb())
 
 

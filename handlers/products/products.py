@@ -126,7 +126,7 @@ async def ed(message: types.Message, state: FSMContext):
         for k in mother_list:
             sorted_mother_list += k + "\n"
     await state.reset_state()
-    await dp.bot.edit_message_text(text=sorted_mother_list, chat_id=-1001445673200, message_id=message_list_id, reply_markup=prod_kb())
+    await dp.bot.edit_message_text(text=sorted_mother_list, chat_id=-1001445673200, message_id=message_list_id)
 
 
 @dp.message_handler(commands='s')

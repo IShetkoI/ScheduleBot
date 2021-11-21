@@ -103,7 +103,7 @@ def prod_kb():
     return keyboard
 
 
-@dp.callback_query_handler(prod_callback.filter(button='prod'))
+@dp.callback_query_handler(prod_callback.filter(prod='prod'))
 async def prod(call: CallbackQuery, callback_data: dict):
     await States.edit.set()
 

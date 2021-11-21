@@ -44,7 +44,7 @@ async def save_subgroup(call: CallbackQuery, callback_data: dict):
         if function == 'tomorrow41':
             keyboard = main_schedule_kb(4, 1)
             sql = "SELECT Time, {0} FROM '{1}'".format(get_weekday(False),
-                                                       (get_table_fourth(1)))
+                                                       (get_table_fourth(1, False)))
             cursor.execute(sql)
             day_list = cursor.fetchall()
             message_text = get_schedule_list(day_list)
@@ -55,7 +55,7 @@ async def save_subgroup(call: CallbackQuery, callback_data: dict):
         if function == 'tomorrow42':
             keyboard = main_schedule_kb(4, 2)
             sql = "SELECT Time, {0} FROM '{1}'".format(get_weekday(False),
-                                                       (get_table_fourth(2)))
+                                                       (get_table_fourth(2, False)))
             cursor.execute(sql)
             day_list = cursor.fetchall()
             message_text = get_schedule_list(day_list)
@@ -66,7 +66,7 @@ async def save_subgroup(call: CallbackQuery, callback_data: dict):
         if function == 'tomorrow5':
             keyboard = main_schedule_kb(5)
             sql = "SELECT Time, {0} FROM '{1}'".format(get_weekday(False),
-                                                       (get_table_fifth()))
+                                                       (get_table_fifth(False)))
             cursor.execute(sql)
             day_list = cursor.fetchall()
             message_text = get_schedule_list(day_list)

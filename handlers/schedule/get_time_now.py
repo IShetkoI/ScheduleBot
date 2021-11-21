@@ -42,24 +42,30 @@ def get_weekday(condition: bool = True):
             return "Monday"
 
 
-def get_number_week():
+def get_number_week(condition):
     number_week = int(datetime.datetime.utcnow().isocalendar()[1])
-    if number_week % 2 == 0:
-        return 2
+    if condition:
+        if number_week % 2 == 0:
+            return 2
+        else:
+            return 1
     else:
-        return 1
+        if number_week % 2 == 0:
+            return 1
+        else:
+            return 2
 
 
-def get_table_fourth(subgroup):
-    return f"4-{subgroup}-{get_number_week()}"
+def get_table_fourth(subgroup: int, condition: bool = True):
+    return f"4-{subgroup}-{get_number_week(condition)}"
 
 
 def get_table_fourth_for_week(subgroup, week):
     return f"4-{subgroup}-{week}"
 
 
-def get_table_fifth():
-    return f"5-{get_number_week()}"
+def get_table_fifth(condition: bool = True):
+    return f"5-{get_number_week(condition)}"
 
 
 def get_table_fifth_for_week(week):

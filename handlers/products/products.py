@@ -97,7 +97,7 @@ prod_callback = CallbackData('mainSchedule-prefix', 'prod', 'prod')
 def prod_kb():
     keyboard = types.InlineKeyboardMarkup(row_width=1)
     bt1 = types.InlineKeyboardButton('Добавить',
-                                     callback_data=prod_callback.new(choose_group='prod',
+                                     callback_data=prod_callback.new(prod='prod',
                                                                      prod="prod"))
     keyboard.row(bt1)
     return keyboard

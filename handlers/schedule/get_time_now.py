@@ -43,7 +43,7 @@ def get_weekday(condition: bool = True):
 
 
 def get_number_week(condition: bool = True):
-    number_week = int(datetime.datetime.utcnow().isocalendar()[1])
+    number_week = int(get_time().isocalendar()[1])
     if condition:
         if number_week % 2 == 0:
             return 2

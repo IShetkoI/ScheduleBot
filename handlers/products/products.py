@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery
@@ -7,16 +9,18 @@ from fuzzywuzzy import fuzz
 from handlers.states import States
 from loader import dp
 
-
 message_list_id = 1
-message_list_text = ''
+message_decor_id = 1
+food = {}
 
 sort_list = [
     "морская капуста",
     "майонез",
     "селедка",
     "сельд",
+    "краб",
     "кургрудка",
+    "курина грудка",
     "кур.грудка",
     "яйца",
     "колбаски",
@@ -26,12 +30,18 @@ sort_list = [
     "колбасу вар",
     "сосиски",
     "колбаса для пиццы",
+    "колбаса",
+    "ветчина",
     "дрожжи",
+    "консерва",
     "корица",
     "перец",
     "ванилин",
     "ванильный сахар",
     "приправа",
+    "стружка",
+    "паприка",
+    "вафли",
     "гречка",
     "рис",
     "макароны",
@@ -59,6 +69,7 @@ sort_list = [
     "хлеб",
     "чай",
     "кофе",
+    "шоколад",
     "туал.бум",
     "тупо.бумага",
     "туалетная",
@@ -76,7 +87,8 @@ sort_list = [
     "кукуруза",
     "фасоль",
     "томатная паста",
-    "том.соус"
+    "том.соус",
+    "вода",
     "картофан",
     "картофель",
     "огурец",
@@ -85,78 +97,144 @@ sort_list = [
     "томаты",
     "шампиньон",
     "лимон",
+    "капуста",
+    "свекла",
+    "свёкла",
     "морковь",
+    "мандарины",
     "пельмени",
     "морожки",
     "мороженки"
 ]
 
-prod_callback = CallbackData('mainSchedule-prefix', 'prod', 'func')
+
+def prod_kb(foods: dict):
+    keyboard_main = types.InlineKeyboardMarkup(row_width=2)
+    for key, value in foods.items():
+        if value['click'] == 0:
+            keyboard_main.add(types.InlineKeyboardButton(text=f"{key}", callback_data=prod_callback.new(prod='prod',
+                                                                                                        food=f"{key[:13]}")))
+        elif value['click'] == 1:
+            keyboard_main.add(types.InlineKeyboardButton(text=strike(key), callback_data=prod_callback.new(prod='prod',
+                                                                                                           food=f"{key[:13]}")))
+        else:
+            pass
+
+    keyboard_main.add(types.InlineKeyboardButton(text="➕", callback_data=prod_callback.new(prod='prod', food="add")),
+                      types.InlineKeyboardButton(text="🔄", callback_data=prod_callback.new(prod='prod',
+                                                                                            food="repeat")))
+
+    return keyboard_main
 
 
-def prod_kb():
-    keyboard = types.InlineKeyboardMarkup(row_width=1)
-    bt1 = types.InlineKeyboardButton('Добавить',
-                                     callback_data=prod_callback.new(prod='prod',
-                                                                     func="prod"))
-    keyboard.row(bt1)
-    return keyboard
+def strike(text):
+    result = ''
+    for c in text:
+        result = result + c + '\u0336'
+    return result
 
 
-@dp.callback_query_handler(prod_callback.filter(prod='prod'))
-async def prod(call: CallbackQuery, callback_data: dict):
-    await States.edit.set()
-
-
-@dp.message_handler(state=States.edit)
-async def ed(message: types.Message, state: FSMContext):
-    global message_list_text
-    mother_list = message.text + "\n" + message_list_text
-    await message.delete()
-    mother_list = mother_list.split("\n")
-    sorted_mother_list = ""
-    for i in sort_list:
-        for k in mother_list:
-            if fuzz.partial_ratio(i.lower(), k.lower()) >= 80:
-                sorted_mother_list += k + "\n"
-                mother_list.remove(k)
-                break
-
-    if mother_list:
-        sorted_mother_list += "\n\nНе найдено:\n"
-        for k in mother_list:
-            sorted_mother_list += k + "\n"
-    await state.reset_state()
-    message_list_text = sorted_mother_list.replace("\n\nНе найдено:\n", "")
-    await dp.bot.edit_message_text(text=sorted_mother_list, chat_id=-1001445673200, message_id=message_list_id.message_id, reply_markup=prod_kb())
-
-
+# start sort prod
 @dp.message_handler(commands='s')
 async def get_list(message: types.Message):
-    if message.chat.id == -1001445673200 and (message.from_user.id == 843434988 or message.from_user.id == 410249555):
-        await States.new.set()
+    global message_decor_id
+    await message.delete()
+    message_decor_id = await message.answer("Ожидаю список")
+    await States.new.set()
 
 
+# add prod
 @dp.message_handler(state=States.new)
 async def get_list(message: types.Message, state: FSMContext):
-    if message.chat.id == -1001445673200 and (message.from_user.id == 843434988 or message.from_user.id == 410249555):
-        global message_list_text
-        global message_list_id
-        mother_list = message.text
-        await message.delete()
-        mother_list = mother_list.split("\n")
-        sorted_mother_list = ""
-        for i in sort_list:
-            for k in mother_list:
-                if fuzz.partial_ratio(i.lower(), k.lower()) >= 80:
-                    sorted_mother_list += k + "\n"
-                    mother_list.remove(k)
-                    break
+    global message_list_id, message_decor_id
 
-        if mother_list:
-            sorted_mother_list += "\n\nНе найдено:\n"
-            for k in mother_list:
-                sorted_mother_list += k + "\n"
-        await state.reset_state()
-        message_list_text = sorted_mother_list.replace("\n\nНе найдено:\n", "")
-        message_list_id = await message.answer(sorted_mother_list, reply_markup=prod_kb())
+    await dp.bot.delete_message(chat_id=message.chat.id, message_id=message_decor_id.message_id)
+
+    sorted_list = ""
+    unsorted_list = message.text.split("\n")
+
+    await message.delete()
+
+    for i in sort_list:
+        for k in unsorted_list:
+            if fuzz.partial_ratio(i.lower(), k.lower()) >= 80:
+                sorted_list += k + "\n"
+                unsorted_list.remove(k)
+
+    for i in range(len(sorted_list.split("\n"))):
+        if sorted_list.split("\n")[i] != '':
+            temp = {sorted_list.split("\n")[i]: {'click': 0}}
+            food.update(temp)
+
+    if unsorted_list:
+        message_list_id = await message.answer(text="Не найдено:\n\n" + str('\n'.join(map(str, unsorted_list))),
+                                               reply_markup=prod_kb(food))
+    else:
+        message_list_id = await message.answer(text="Список:", reply_markup=prod_kb(food))
+
+    await state.reset_state()
+
+
+prod_callback = CallbackData('mainSchedule-prefix', 'prod', 'food')
+
+
+# callback_query_handler
+@dp.callback_query_handler(prod_callback.filter(prod='prod'))
+async def prod(call: CallbackQuery, callback_data: dict):
+    global message_list_id, message_decor_id
+    action = callback_data.get('food')
+
+    if action != "add" and action != "repeat":
+        for key, value in food.items():
+            if action == key[:13]:
+                food[key]['click'] += 1
+        message_list_id = await dp.bot.edit_message_reply_markup(chat_id=call.message.chat.id,
+                                                                 message_id=call.message.message_id,
+                                                                 reply_markup=prod_kb(food))
+
+    elif action == "repeat":
+        for key, value in food.items():
+            food[key]['click'] = 0
+        message_list_id = await dp.bot.edit_message_reply_markup(chat_id=call.message.chat.id,
+                                                                 message_id=call.message.message_id,
+                                                                 reply_markup=prod_kb(food))
+
+    else:
+        message_decor_id = await call.message.answer("Что добавим?")
+        await States.edit.set()
+
+
+# добавляем продукты in list
+@dp.message_handler(state=States.edit)
+async def ed(message: types.Message, state: FSMContext):
+    global message_list_id, message_decor_id
+
+    await dp.bot.delete_message(chat_id=message.chat.id, message_id=message_decor_id.message_id)
+
+    sorted_list = ""
+    unsorted_list = message.text.split("\n")
+
+    await message.delete()
+
+    for i in sort_list:
+        for k in unsorted_list:
+            if fuzz.partial_ratio(i.lower(), k.lower()) >= 80:
+                sorted_list += k + "\n"
+                unsorted_list.remove(k)
+
+    for i in range(len(sorted_list.split("\n"))):
+        if sorted_list.split("\n")[i] != '':
+            temp = {sorted_list.split("\n")[i]: {'click': 0}}
+            food.update(temp)
+
+    if unsorted_list:
+        message_list_id = await dp.bot.edit_message_text(
+            text="Не найдено:\n\n" + str('\n'.join(map(str, unsorted_list))),
+            chat_id=message.chat.id, message_id=message_list_id.message_id,
+            reply_markup=prod_kb(food))
+    else:
+        message_list_id = await dp.bot.edit_message_text(text="Список:", chat_id=message.chat.id,
+                                                         message_id=message_list_id.message_id,
+                                                         reply_markup=prod_kb(food))
+
+    await state.reset_state()

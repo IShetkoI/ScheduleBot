@@ -43,6 +43,7 @@ async def save_subgroup(call: CallbackQuery, callback_data: dict):
     if get_weekday(False) is not None:
         if function == 'tomorrow41':
             keyboard = main_schedule_kb(4, 1)
+            # тут
             sql = "SELECT Time, {0} FROM '{1}'".format(get_weekday(False),
                                                        (get_table_fourth(1, False)))
             cursor.execute(sql)
